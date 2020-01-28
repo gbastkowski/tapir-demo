@@ -1,0 +1,58 @@
+openapi: 3.0.1
+info:
+  title: info
+  version: version
+paths:
+  /:
+    post:
+      operationId: postRoot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalHolder'
+        required: true
+      responses:
+        '201':
+          description: ''
+components:
+  schemas:
+    AnimalHolder:
+      required:
+      - value
+      - square
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/Animal'
+        square:
+          $ref: '#/components/schemas/Square'
+    Animal:
+      oneOf:
+      - $ref: '#/components/schemas/Boar'
+      - $ref: '#/components/schemas/Cat'
+    Boar:
+      required:
+      - weight
+      type: object
+      properties:
+        weight:
+          type: integer
+    Cat:
+      required:
+      - name
+      - weight
+      type: object
+      properties:
+        name:
+          type: string
+        weight:
+          type: integer
+    Square:
+      required:
+      - a
+      type: object
+      properties:
+        a:
+          type: integer
+
