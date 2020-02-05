@@ -1,0 +1,12 @@
+PUT http://localhost:8081/animals
+Accept: application/json
+Content-Type: application/json
+User-Agent: Emacs with restclient.el
+{
+  "value" : {
+    "type" : "Cat",
+    "name" : "Lucky",
+    "weight" : 700
+  },
+  "square" : { "a" : 1 }
+}
