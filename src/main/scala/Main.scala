@@ -17,20 +17,25 @@ import sttp.tapir.SchemaType.SProduct
 object Main extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
-    BlazeServerBuilder[IO]
-      .bindHttp(8081, "0.0.0.0")
-      .withHttpApp(
-        Router(
-          "/docs"  -> swaggerUi,
-          "/"      -> (AnimalEndpoint.get.toRoutes(handleGet)
-                  <+>  AnimalEndpoint.post.toRoutes(handle)
-                  <+>  AnimalEndpoint.put.toRoutes(handle)))
-          .orNotFound)
-      .serve.compile.drain.as(ExitCode.Success)
+    println(yaml)
+    IO(ExitCode.Success)
+    // BlazeServerBuilder[IO]
+    //   .bindHttp(8082, "0.0.0.0")
+    //   .withHttpApp(
+    //     Router(
+    //       "/docs"  -> swaggerUi,
+    //       "/"      -> (AnimalEndpoint.get.toRoutes(handleGet)
+    //               <+>  AnimalEndpoint.post.toRoutes(handle2)
+    //               <+>  AnimalEndpoint.put.toRoutes(handle)))
+    //       .orNotFound)
+    //   .serve.compile.drain.as(ExitCode.Success)
   }
+
   private def handleGet(name: String): IO[Either[Unit, Unit]] = IO(Right(()))
 
   private def handle(holder: AnimalHolder): IO[Either[Unit, Unit]] = IO(Right(()))
+
+  private def handle2(holder: AnimalHolder2): IO[Either[Unit, Unit]] = IO(Right(()))
 
   private def redoc: HttpRoutes[IO] = new RedocHttp4s("Animal App", yaml).routes[IO]
 

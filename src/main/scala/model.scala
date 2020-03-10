@@ -3,6 +3,7 @@ import io.circe.Json._
 import io.circe.generic.semiauto._
 
 object AnimalHolder {
+
   implicit val codec: Codec[AnimalHolder] = Codec.from(decode, encode)
 
   private def decode(c: HCursor) = for {
@@ -24,14 +25,38 @@ object AnimalHolder {
     "square" -> Square.codec(h.square)
   )
 }
+object AnimalHolder2 {
+  implicit val codec: Codec[AnimalHolder2] = Codec.from(decode2, encode2)
+  private def decode2(c: HCursor) = for {
+    animalType  <-  c.downField("value").downField("type").as[String]
+    value       <-  animalType match {
+                      case "Boar" => c.downField("value").as[Boar]
+                      case "Cat"  => c.downField("value").as[Cat]
+                    }
+    square      <- c.downField("square").as[Square]
+  } yield AnimalHolder2(value, square)
+
+  private def encode2(h: AnimalHolder2) = obj(
+    "value" -> {
+      h.value match {
+        case b: Boar => Animal.boarCodec(b)
+        case c: Cat => Animal.catCodec(c)
+      }
+    },
+    "square" -> Square.codec(h.square)
+  )
+
+}
+
+case class AnimalHolder2(value: Animal, square: Square)
 
 case class AnimalHolder(value: Animal, square: Square)
 
 sealed trait Animal
 
-case class Boar(weight: Int) extends Animal
+case class Boar(weight: BigDecimal) extends Animal
 
-case class Cat(name: String, weight: Int) extends Animal
+case class Cat(name: String, weight: BigDecimal) extends Animal
 
 object Animal {
 
